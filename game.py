@@ -14,7 +14,7 @@ class Game(object):
        options for game parameters to be **greatly** altered.
     """
 
-    def __init__(self, players, turns = 8, targets = 3, sprites = 'pokemon', options = 6):
+    def __init__(self, players, turns = 8, targets = 3, sprites = 'pokemon', options = 5):
         self.self = self
         self.players = players
         self.targets = targets
@@ -22,11 +22,12 @@ class Game(object):
         self.move_order = None
         self.game_move_order = None
         self.turns = int(turns)
-        self.total_turns = players * turns
+        self.total_turns = len(players) * turns
         self.sprites_choice = pd.read_csv('sprites/pokemon.csv') if sprites == 'pokemon' else None
 
         # Sampling also randomizes the order
         self.target_data = self.sprites_choice.sample(options)
+        self.options = list(self.target_data.Pokemon.values)
         self.target_pattern = None
 
         # turn info
@@ -34,6 +35,7 @@ class Game(object):
         self.hitblow = []
         self.winner = None
         self.winner_combo = None
+        self.num_guesses = None
 
         # outcome info
         self.turn_stats = []
@@ -71,6 +73,13 @@ class Game(object):
     def game_status(self, player, guess, move):
         if self.hitblow[move-1]['hit'] == self.targets:
             game_status = 'winner'
+            self.winner = player.gtag
+            self.winner_combo = guess
+            self.num_guesses = move
 
-            if game_status == 'winner':
-                self.winner = player
+        elif (self.hitblow[move-1]['hit'] < self.targets) & (move == self.total_turns):
+            game_status = 'fail'
+            self.winner = 'none'
+
+        else:
+            self.num_guesses = move
