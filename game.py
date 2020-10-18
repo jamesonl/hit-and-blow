@@ -37,9 +37,6 @@ class Game(object):
         self.winner_combo = None
         self.num_guesses = None
 
-        # outcome info
-        self.turn_stats = []
-
     def random_move_order(self):
         # pnames = [x.gtag for x in self.players]
         random.shuffle(self.players)
@@ -53,15 +50,15 @@ class Game(object):
         pokedata = self.target_data.Pokemon.values[0:self.targets]
         self.target_pattern = list(pokedata)
 
-    def hitblow_check(self, guess, move):
+    def hitblow_check(self, target_pattern, guess, move):
         blow = 0
         hit = 0
 
         counter = 0
         for val in guess:
-            if val == self.target_pattern[counter]:
+            if val == target_pattern[counter]:
                 hit += 1
-            elif val != self.target_pattern[counter] and val in self.target_pattern:
+            elif val != target_pattern[counter] and val in target_pattern:
                 blow += 1
             else:
                 pass

@@ -13,6 +13,13 @@ class Player(object):
         self.gtag = generate_slug(2) if ptype == 'robot' else gtag
         self.ptype = ptype
 
-    def create_guess(self, targets, target_len):
-        guess = random.sample(targets, target_len)
+    def create_guess(self, targets, target_len, history):
+        unique_guess = False
+        while unique_guess == False:
+            guess = random.sample(targets, target_len)
+
+            if guess in history:
+                pass
+            else:
+                unique_guess = True
         return guess
